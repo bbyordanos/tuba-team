@@ -70,8 +70,15 @@ export default function ProductDetail() {
 
   const handleLike = async () => {
     if (!user) { toast('Sign in to like 💕'); return; }
-    const r = await API.post(`/products/${id}/like`);
-    setLiked(r.data.liked); setLikeCount(c => r.data.liked ? c+1 : c-1);
+    const newLiked = !liked;
+    setLiked(newLiked);
+    setLikeCount(c => newLiked ? c + 1 : c - 1);
+    try {
+      await API.post(`/products/${id}/like`);
+    } catch {
+      setLiked(!newLiked);
+      setLikeCount(c => newLiked ? c - 1 : c + 1);
+    }
   };
 
   const handleCart = async () => {
