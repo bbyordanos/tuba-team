@@ -39,7 +39,6 @@ export default function ProductCard({ product, onLikeChange }) {
   const handleLike = async (e) => {
     e.stopPropagation();
     if (!user) { toast('Sign in to like items 💕'); return; }
-    // Optimistic update — change immediately
     const newLiked = !liked;
     setLiked(newLiked);
     setLikeCount(c => newLiked ? c + 1 : c - 1);
@@ -47,7 +46,6 @@ export default function ProductCard({ product, onLikeChange }) {
       await API.post(`/products/${product.id}/like`);
       onLikeChange?.();
     } catch {
-      // Revert if failed
       setLiked(!newLiked);
       setLikeCount(c => newLiked ? c - 1 : c + 1);
     }
@@ -56,7 +54,6 @@ export default function ProductCard({ product, onLikeChange }) {
   const handleCart = async (e) => {
     e.stopPropagation();
     if (!user) { toast('Sign in to add to cart 🛒'); return; }
-    // Optimistic update
     setInCart(true);
     try {
       await addToCart(product.id);
@@ -70,7 +67,6 @@ export default function ProductCard({ product, onLikeChange }) {
   return (
     <div className="card" onClick={() => navigate(`/product/${product.id}`)}
       style={{ cursor: 'pointer', position: 'relative', display: 'flex', flexDirection: 'column' }}>
-      {/* Photo */}
       <div style={{ position: 'relative', overflow: 'hidden', height: 260, background: 'var(--blush)' }}>
         {imgSrc ? (
           <img src={imgSrc} alt={product.name}
@@ -83,7 +79,6 @@ export default function ProductCard({ product, onLikeChange }) {
             {CATEGORY_EMOJI[categoryKey]}
           </div>
         )}
-        {/* Badges */}
         <div style={{ position: 'absolute', top: 10, left: 10, display: 'flex', gap: 6, flexWrap: 'wrap' }}>
           <span className="tag" style={{ background: 'rgba(255,255,255,0.9)', fontSize: 11 }}>
             {CATEGORY_EMOJI[categoryKey]} {product.category}
@@ -95,7 +90,6 @@ export default function ProductCard({ product, onLikeChange }) {
             </span>
           )}
         </div>
-        {/* Like button — instant response */}
         <button onClick={handleLike} style={{
           position: 'absolute', top: 10, right: 10,
           background: 'rgba(255,255,255,0.9)', border: 'none',
@@ -109,13 +103,10 @@ export default function ProductCard({ product, onLikeChange }) {
         >
           {liked ? '❤️' : '🤍'}
         </button>
-        {/* Views */}
         <div style={{ position: 'absolute', bottom: 10, right: 10, background: 'rgba(0,0,0,0.4)', color: 'white', padding: '2px 8px', borderRadius: 50, fontSize: 11 }}>
           👁 {product.views || 0}
         </div>
       </div>
-
-      {/* Info */}
       <div style={{ padding: '16px', flex: 1, display: 'flex', flexDirection: 'column', gap: 8 }}>
         <h3 style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: 19, fontWeight: 600, color: 'var(--text)', lineHeight: 1.2 }}>
           {product.name}
@@ -129,7 +120,6 @@ export default function ProductCard({ product, onLikeChange }) {
           <span className="price">ETB {product.price?.toLocaleString()}</span>
           {product.original_price && <span className="price-original">ETB {product.original_price?.toLocaleString()}</span>}
         </div>
-        {/* Cart button — instant response */}
         <button className="btn-primary" onClick={handleCart}
           style={{ marginTop: 'auto', width: '100%', justifyContent: 'center', padding: '10px',
             background: inCart ? 'var(--gradient-gold)' : undefined }}>
