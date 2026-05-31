@@ -1,0 +1,15 @@
+[phases.setup]
+nixPkgs = ["nodejs_20"]
+
+[phases.install]
+cmds = ["echo ready"]
+
+[phases.build]
+cmds = [
+  "cd frontend && npm install --legacy-peer-deps",
+  "cd frontend && CI=false NODE_OPTIONS=--max-old-space-size=512 npm run build",
+  "cd backend && npm install --production"
+]
+
+[start]
+cmd = "node backend/server.js"
